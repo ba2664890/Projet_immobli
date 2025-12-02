@@ -40,7 +40,7 @@ class DuplicatesPipeline:
         item["id"] = url_hash
         return item
 
-class PostgreSQLPipeline:
+class CoinsafriquePostgreSQLPipeline:
     def __init__(self, **db_params):
         self.db_params = db_params
         self.conn = None  # Initialisation pour éviter AttributeError
@@ -53,7 +53,7 @@ class PostgreSQLPipeline:
         self.conn = psycopg2.connect(**self.db_params)
         with self.conn.cursor() as cur:
             cur.execute("""
-                CREATE TABLE IF NOT EXISTS properties(
+                CREATE TABLE IF NOT EXISTS coinafriqure(
                     id VARCHAR(32) PRIMARY KEY,
                     url TEXT UNIQUE,
                     title TEXT,
@@ -104,7 +104,7 @@ class PostgreSQLPipeline:
                 
             with self.conn.cursor() as cur:
                 cur.execute("""
-                    INSERT INTO properties(
+                    INSERT INTO coinafriqure(
                         id, url, title, price, city, description, source,
                         latitude, longitude, scraped_at,
                         bedrooms, bathrooms, surface_area,

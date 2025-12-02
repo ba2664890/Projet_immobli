@@ -59,11 +59,11 @@ ITEM_PIPELINES = {
     # DÉCOMMENTEZ le bon pipeline selon votre spider :
     
     # Pour spider principal (table 'properties'):
-    # "scrapping_immobli.pipelines.PostgreSQLPipeline": 300,
+    "scrapping_immobli.pipelines.CoinsafriquePostgreSQLPipeline": 300,
     
     # Pour ExpatDakar (table 'expat_dakar_properties'):
-    "scrapping_immobli.pipelines.ExpatDakarPostgreSQLPipeline": 300,
+    #"scrapping_immobli.pipelines.ExpatDakarPostgreSQLPipeline": 300,
     
     # Pour LogerDakar (table 'loger_dakar_properties'):
-    # "scrapping_immobli.pipelines.LogerDakarPostgreSQLPipeline": 300,
+    #"scrapping_immobli.pipelines.LogerDakarPostgreSQLPipeline": 300,
 }

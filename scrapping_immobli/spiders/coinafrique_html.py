@@ -1,3 +1,4 @@
+import hashlib
 import scrapy
 from scrapy.loader import ItemLoader
 from scrapping_immobli.items import PropertyItem
@@ -6,7 +7,6 @@ import json
 from itemloaders.processors import MapCompose, TakeFirst
 
 
-connection_string = "postgresql://neondb_owner:npg_ciyfh8H9bZdj@ep-frosty-wind-a4aoph5q-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
 class CoinAfriqueHtmlSpider(scrapy.Spider):
     name = "coinafrique_html"
@@ -21,6 +21,11 @@ class CoinAfriqueHtmlSpider(scrapy.Spider):
     # 2) CONFIGURATION
     # ------------------------------------------------------------------
     custom_settings = {
+        "ITEM_PIPELINES": {
+            "scrapping_immobli.pipelines.ValidationPipeline": 300,
+            "scrapping_immobli.pipelines.DuplicatesPipeline": 400,
+            "scrapping_immobli.pipelines.CoinsafriquePostgreSQLPipeline": 300,
+        },
         "DOWNLOAD_DELAY": 1,
         "CONCURRENT_REQUESTS": 16,
         "ROBOTSTXT_OBEY": False,
@@ -77,6 +82,10 @@ class CoinAfriqueHtmlSpider(scrapy.Spider):
                 return float(re.search(r'(\d+(?:\.\d+)?)', txt.replace('\u202f', '').replace(' ', '')).group(1))
             except (ValueError, AttributeError):
                 return None
+        # Génération d'un identifiant unique à partir de l'URL
+        url = response.url
+        unique_id = hashlib.md5(url.encode()).hexdigest()
+        loader.add_value("id", unique_id)
 
         # ------------------------------------------------------------------
         # Dans parse_detail
